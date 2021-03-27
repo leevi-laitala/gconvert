@@ -1,2 +1,2 @@
 # gconvert
-Ghetto unit converter
+Ghetto unit converter, which most probably contains errors
