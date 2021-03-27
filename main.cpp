@@ -4,7 +4,7 @@
 #include <math.h>
 #include <optional>
 
-enum class units
+enum class units : char
 {
     k = 10, c, f,
     mph = 20, kmh, ms, kn, fts,
@@ -268,51 +268,48 @@ std::optional<float> convert(units a, units b, float val)
 int main(int argc, char* argv[])
 {
     float val;
-
-    if (argc != 4)
+    
+    if (argc == 1)
     {
-        if (argc == 1)
-        {
-            std::cout << "Ghetto general purpose unit converter application." << std::endl;
-            std::cout << "" << std::endl;
-            std::cout << "Units: | Temperature:  | Velocity:          | Volume:      | Mass:         | Lenght:         |" << std::endl;
-            std::cout << "       +–––––––––––––––+––––––––––––––––––––+––––––––––––––+–––––––––––––––+–––––––––––––––––+" << std::endl;
-            std::cout << "       | <k> Kelvin    | <mph> Miles/h      | <gal> Gallon | <lb> Pound    | <in> Inch       |" << std::endl;
-            std::cout << "       | <c> Celsius   | <kmh> Kilometers/h | <l>   Litre  | <kg> Kilogram | <ft> Foot       |" << std::endl;
-            std::cout << "       | <f> Farenheit | <ms>  Meters/s     | <oz>  Ounce  | <g>  Gram     | <yd> Yard       |" << std::endl;
-            std::cout << "       |               | <kn>  Knots        |              | <oz> Ounce    | <mi> Mile       |" << std::endl;
-            std::cout << "       |               | <fts> Feet/s       |              |               | <km> Kilometer  |" << std::endl;
-            std::cout << "       |               |                    |              |               | <m>  Meter      |" << std::endl;
-            std::cout << "       |               |                    |              |               | <cm> Centimeter |" << std::endl;
-            std::cout << "       |               |                    |              |               | <mm> Millimeter |" << std::endl;
-            std::cout << "" << std::endl;
-            std::cout << "Syntax: command <from> <to> <value>" << std::endl;
-            std::cout << "" << std::endl;
-            std::cout << "Example: command c f 34.2             --> converts 34.2C to farenheit" << std::endl;
-            std::cout << "         command mi km 17.5           --> converts 17.5mi to kilometers" << std::endl;
-        }
+        std::cout << "Ghetto general purpose unit converter application." << std::endl;
+        std::cout << "" << std::endl;
+        std::cout << "Units: | Temperature:  | Velocity:          | Volume:      | Mass:         | Lenght:         |" << std::endl;
+        std::cout << "       +–––––––––––––––+––––––––––––––––––––+––––––––––––––+–––––––––––––––+–––––––––––––––––+" << std::endl;
+        std::cout << "       | <k> Kelvin    | <mph> Miles/h      | <gal> Gallon | <lb> Pound    | <in> Inch       |" << std::endl;
+        std::cout << "       | <c> Celsius   | <kmh> Kilometers/h | <l>   Litre  | <kg> Kilogram | <ft> Foot       |" << std::endl;
+        std::cout << "       | <f> Farenheit | <ms>  Meters/s     | <oz>  Ounce  | <g>  Gram     | <yd> Yard       |" << std::endl;
+        std::cout << "       |               | <kn>  Knots        |              | <oz> Ounce    | <mi> Mile       |" << std::endl;
+        std::cout << "       |               | <fts> Feet/s       |              |               | <km> Kilometer  |" << std::endl;
+        std::cout << "       |               |                    |              |               | <m>  Meter      |" << std::endl;
+        std::cout << "       |               |                    |              |               | <cm> Centimeter |" << std::endl;
+        std::cout << "       |               |                    |              |               | <mm> Millimeter |" << std::endl;
+        std::cout << "" << std::endl;
+        std::cout << "Syntax: command <from> <to> <value>" << std::endl;
+        std::cout << "" << std::endl;
+        std::cout << "Example: command c f 34.2             --> converts 34.2C to farenheit" << std::endl;
+        std::cout << "         command mi km 17.5           --> converts 17.5mi to kilometers" << std::endl;
 
         return 1;
     }
 
     std::string from = argv[1];
     std::string to   = argv[2];
-    try { val = std::stof(argv[3]); } catch(std::exception& e) { return 1; }
+
+    try { val = std::stof(argv[3]); }
+        catch(std::exception& e) { return 1; }
 
     units iFrom = parseUnits(from);
     units iTo = parseUnits(to);
 
-    if (iFrom == units::err || iTo == units::err) return 1;
+    if (iFrom == units::err || iTo == units::err)
+        return 1;
 
     auto con = convert(iFrom, iTo, val);
 
     if (con.has_value())
-    {
         std::cout << con.value() << std::endl;
-    } else
-    {
+    else    
         return 1;
-    }
 
     return 0;
 }
