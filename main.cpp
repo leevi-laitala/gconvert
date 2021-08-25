@@ -10,7 +10,7 @@ enum class units : char
     mph = 20, kmh, ms, kn, fts,
     gal = 30, l, oz,
     lb = 40, kg, g,
-    in = 50, ft, yd, mi, km, m, cm, mm,
+    in = 50, ft, yd, mi, km, m, mm,
 
     err = -1
 };
@@ -41,7 +41,6 @@ units parseUnits(std::string input)
     if (input == "mi")  return units::mi;
     if (input == "km")  return units::km;
     if (input == "m")   return units::m;
-    if (input == "cm")  return units::cm;
     if (input == "mm")  return units::mm;
 
     return units::err;
@@ -58,11 +57,11 @@ std::optional<float> convert(units a, units b, float val)
     case 1011: // k c
         return val - 273.15f;
     case 1012: // k f
-        return val * -457.87f;
+        return val * (9.f / 5.f) - 459.67f;
     case 1110: // c k
         return val + 273.15f;
     case 1112: // c f
-        return val * 33.8f;
+        return val * (9.f / 5.f) + 32.f;
     case 1210: // f k
         return (val + 459.67f) * (5.0f / 9.0f);
     case 1211: // f c
@@ -157,9 +156,7 @@ std::optional<float> convert(units a, units b, float val)
         return val * 0.0000254f;
     case 5055: // in m
         return val * 0.0254f;
-    case 5056: // in cm
-        return val * 2.54f;
-    case 5057: // in mm
+    case 5056: // in mm
         return val * 25.4f;
     case 5150: // ft in
         return val * 12.0f;
@@ -171,13 +168,11 @@ std::optional<float> convert(units a, units b, float val)
         return val / 3280.8f;
     case 5155: // ft m
         return val * 0.3048f;
-    case 5156: // ft cm
-        return val * 30.48f;
-    case 5157: // ft mm
+    case 5156: // ft mm
         return val * 304.8f;
     case 5250: // yd in
         return val * 36.0f;
-    case 5252: // yd ft
+    case 5251: // yd ft
         return val * 3.0f;
     case 5253: // yd mi
         return val * 0.00056818181f;
@@ -185,9 +180,7 @@ std::optional<float> convert(units a, units b, float val)
         return val * 0.0009144f;
     case 5255: // yd m
         return val * 0.9144f;
-    case 5256: // yd cm
-        return val * 91.44f;
-    case 5257: // yd mm
+    case 5256: // yd mm
         return val * 914.4f;
     case 5350: // mi in
         return val * 63360.0f;
@@ -199,9 +192,7 @@ std::optional<float> convert(units a, units b, float val)
         return val * 1.609344f;
     case 5355: // mi m
         return val * 1609.344f;
-    case 5356: // mi cm
-        return val * 160934.4f;
-    case 5357: // mi mm
+    case 5356: // mi mm
         return val * 1609344.0f;
     case 5450: // km in
         return val * 39370.078740157f;
@@ -213,9 +204,7 @@ std::optional<float> convert(units a, units b, float val)
         return val * 0.62137119f;
     case 5455: // km m
         return val * 1000.0f;
-    case 5456: // km cm
-        return val * 100000.0f;
-    case 5457: // km mm
+    case 5456: // km mm
         return val * 1000000.0f;
     case 5550: // m in
         return val * 39.370078740157f;
@@ -227,38 +216,20 @@ std::optional<float> convert(units a, units b, float val)
         return val * 0.00062137119f;
     case 5554: // m km
         return val / 1000.0f;
-    case 5556: // m cm
-        return val * 100.0f;
-    case 5557: // m mm
+    case 5556: // m mm
         return val * 1000.0f;
-    case 5650: // cm in
+    case 5650: // mm in
         return val * 0.039370078740157f;
-    case 5651: // cm ft
-        return val * 328.08f;
-    case 5652: // cm yd
-        return val * 109.36f;
-    case 5653: // cm mi
-        return val * 0.0000062137119f;
-    case 5654: // cm km
-        return val / 100000.0f;
-    case 5655: // cm m
-        return val / 1000000.0f;
-    case 5657: // cm mm
-        return val * 10.0f;
-    case 5750: // mm in
-        return val * 0.0039370078740157f;
-    case 5751: // mm ft
-        return val * 3280.8f;
-    case 5752: // mm yd
-        return val * 1093.6f;
-    case 5753: // mm mi
+    case 5651: // mm ft
+        return val * 0.0032808f;
+    case 5652: // mm yd
+        return val * 0.0010936f;
+    case 5653: // mm mi
         return val * 0.00000062137119f;
-    case 5754: // mm km
+    case 5654: // mm km
         return val / 1000000.0f;
-    case 5755: // mm m
+    case 5655: // mm m
         return val / 1000.0f;
-    case 5756: // mm cm
-        return val / 10.0f;
 
     default:
         return {};
@@ -271,23 +242,20 @@ int main(int argc, char* argv[])
     
     if (argc == 1)
     {
-        std::cout << "Ghetto general purpose unit converter application." << std::endl;
-        std::cout << "" << std::endl;
-        std::cout << "Units: | Temperature:  | Velocity:          | Volume:      | Mass:         | Lenght:         |" << std::endl;
-        std::cout << "       +–––––––––––––––+––––––––––––––––––––+––––––––––––––+–––––––––––––––+–––––––––––––––––+" << std::endl;
-        std::cout << "       | <k> Kelvin    | <mph> Miles/h      | <gal> Gallon | <lb> Pound    | <in> Inch       |" << std::endl;
-        std::cout << "       | <c> Celsius   | <kmh> Kilometers/h | <l>   Litre  | <kg> Kilogram | <ft> Foot       |" << std::endl;
-        std::cout << "       | <f> Farenheit | <ms>  Meters/s     | <oz>  Ounce  | <g>  Gram     | <yd> Yard       |" << std::endl;
-        std::cout << "       |               | <kn>  Knots        |              | <oz> Ounce    | <mi> Mile       |" << std::endl;
-        std::cout << "       |               | <fts> Feet/s       |              |               | <km> Kilometer  |" << std::endl;
-        std::cout << "       |               |                    |              |               | <m>  Meter      |" << std::endl;
-        std::cout << "       |               |                    |              |               | <cm> Centimeter |" << std::endl;
-        std::cout << "       |               |                    |              |               | <mm> Millimeter |" << std::endl;
-        std::cout << "" << std::endl;
-        std::cout << "Syntax: command <from> <to> <value>" << std::endl;
-        std::cout << "" << std::endl;
-        std::cout << "Example: command c f 34.2             --> converts 34.2C to farenheit" << std::endl;
-        std::cout << "         command mi km 17.5           --> converts 17.5mi to kilometers" << std::endl;
+        std::cout <<
+"Ghetto general purpose unit converter application.\n\n\
+Units: | Temperature:  | Velocity:          | Volume:              | Mass:         | Lenght:         |\n\
+       +–––––––––––––––+––––––––––––––––––––+––––––––––––----------+–––––––––––––––+–––––––––––––––––+\n\
+       | <k> Kelvin    | <mph> Miles/h      | <gal> US Gallon      | <lb> Pound    | <in> Inch       |\n\
+       | <c> Celsius   | <kmh> Kilometers/h | <l>   Litre          | <kg> Kilogram | <ft> Foot       |\n\
+       | <f> Farenheit | <ms>  Meters/s     | <oz>  US Fluid Ounce | <g>  Gram     | <yd> Yard       |\n\
+       |               | <kn>  Knots        |                      | <oz> Ounce    | <mi> Mile       |\n\
+       |               | <fts> Feet/s       |                      |               | <km> Kilometer  |\n\
+       |               |                    |                      |               | <m>  Meter      |\n\
+       |               |                    |                      |               | <mm> Millimeter |\n\n\
+Syntax: command <from> <to> <value>\n\n\
+Example: command c f 34.2    --> converts 34.2C to farenheit\n\
+         command mi km 17.5  --> converts 17.5mi to kilometers" << std::endl; 
 
         return 1;
     }
@@ -299,9 +267,9 @@ int main(int argc, char* argv[])
         catch(std::exception& e) { return 1; }
 
     units iFrom = parseUnits(from);
-    units iTo = parseUnits(to);
+    units iTo   = parseUnits(to);
 
-    if (iFrom == units::err || iTo == units::err)
+    if (iFrom == units::err || iTo == units::err) 
         return 1;
 
     auto con = convert(iFrom, iTo, val);
